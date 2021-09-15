@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'voice',
     'tag',
     'rest_framework',
+    'django_filters',
     'corsheaders',
 ]
 
