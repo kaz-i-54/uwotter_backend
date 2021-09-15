@@ -7,7 +7,9 @@ from rest_framework import views
 
 class VoiceListAPIView(views.APIView):
     # VOICE001を実装する
+    pass
 
 
 class VoiceCreateAPIView(views.APIView):
     # VOICE002を実装する
+    pass
