@@ -1,19 +1,19 @@
-version: "3.7"
+version: "3.3"
 
 services:
   python-django:
     container_name: django
-    build: 
+    build:
       context: ./Python
     image: python:django_rest_api
     #command: python django_api/manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
     working_dir: /code
-    tty: true 
+    tty: true
     volumes:
       - ./code:/code
-    networks: 
+    networks:
       - django_react
 
   # db:
@@ -21,9 +21,9 @@ services:
   #   image: postgres:11.2
   #   volumes:
   #     - django_db:/var/lib/postgres/data
-  #   networks: 
+  #   networks:
   #     - django_react
-  #   environment: 
+  #   environment:
   #     POSTGRES_DB: django_db
   #     POSTGRES_USER: root
   #     POSTGRES_PASSWORD: secret

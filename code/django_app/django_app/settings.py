@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user',
     'rest_framework',
     'djoser',
+    'django_filters',
     'corsheaders',
 
 ]
