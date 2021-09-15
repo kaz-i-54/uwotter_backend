@@ -1,4 +1,5 @@
 from .models import Tag
+
 from rest_framework import serializers
 
 
@@ -6,7 +7,7 @@ class TagListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name')
-        # read_only_fields = ()
+        read_only_fields = ('id',)
 
     """
     def get_full_name(self, instance):
