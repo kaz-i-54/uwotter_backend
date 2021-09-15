@@ -1,10 +1,8 @@
 from django.urls import include, path
-from rest_framework import routers
-from .views import TagListViewSet
+from . import views
 
-router = routers.DefaultRouter()
-router.register(r'tags', TagListViewSet)
+app_name = "aptv1_tag"
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('/tags', views.TagListAPIView.as_view()),
 ]
