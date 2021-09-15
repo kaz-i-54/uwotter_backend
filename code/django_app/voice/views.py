@@ -20,7 +20,6 @@ class VoiceListAPIView(APIView):
             return Response(None, status.status.HTTP_400_BAD_REQUEST)
 
         current_time = request.data["now"]
-        print(current_time)
 
         if "tag_uuid" in request.data.keys():
             if "synthetic" in request.data.keys():
@@ -51,6 +50,13 @@ class VoiceListAPIView(APIView):
                 return Response(response_json, status=status.HTTP_200_OK)
 
 
+def get_sample_voice():
+    """テスト用ボイス生成関数(フシギダネの鳴き声)"""
+    with open("voice_sample/001.wav", "br") as f:
+        b64_voice = base64.b64encode(f.read())
+    return b64_voice
+
+
 def construct_voicelist_json(voice_list):
     result_list = []
     for voice_dict in voice_list:
@@ -60,8 +66,8 @@ def construct_voicelist_json(voice_list):
         one_dict = {
             "user": user.values("id", "username")[0],
             "tags": list(tags.values()),
-            "voice": "aaaaaaaaaaaaaaaa",
-            # "voice": voice_dict["voice"],
+            "voice": get_sample_voice(),
+            # "voice": base64.b64encode(voice_dict["voice"]),
             "like": voice_dict["like_num"],
         }
         result_list.append(one_dict)
