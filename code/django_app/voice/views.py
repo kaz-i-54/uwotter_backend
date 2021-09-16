@@ -26,12 +26,18 @@ class VoiceListAPIView(APIView):
             if "synthetic" in request.data.keys():
                 if request.data["synthetic"]:
                     # TAG-003
+                    print("synthetic is called")
                     tag_id = request.data["tag_uuid"]
                     voices = Voice.objects.filter(created_at__lte=current_time) \
                         .filter(tag=tag_id) \
                         .order_by("-created_at")
+                    if voices.exists() is False:
+                        # ない場合もあるのでよくないかもしれない
+                        print("該当する投稿がありません")
+                        return Response({'message': '該当する投稿がありません'}, status.HTTP_400_BAD_REQUEST)
                     raw_voice_list = []
                     for i in voices.values("voice"):
+                        # TODO: i["vioce"]は何があるか確認する(おそらく音声ファイルが壊れている)
                         raw_voice_list.append(i["voice"])
                     raw_wav_multi_data = multi_mixing(raw_voice_list)
                     response_json = construct_multivoice_json(raw_wav_multi_data, tag_id)
@@ -84,6 +90,7 @@ def construct_voicelist_json(voice_list):
         tags = voice.tag.all()
         user = MyUser.objects.filter(pk=voice_dict["created_user"])
         one_dict = {
+            "id": voice_dict["id"],
             "user": user.values("id", "name")[0],
             "tags": list(tags.values()),
             # TODO: データベースからbase64にエンコード済みのデータが渡されています
