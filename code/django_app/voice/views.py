@@ -17,6 +17,8 @@ import json
 
 class VoiceListAPIView(APIView):
     # VOICE001を実装する
+    LIMIT_VOICE_NUM = 10
+
     def get(self, request, *args, **kwargs):
         if "now" not in request.data.keys():
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
@@ -31,7 +33,7 @@ class VoiceListAPIView(APIView):
                     tag_id = request.data["tag_uuid"]
                     voices = Voice.objects.filter(created_at__lte=current_time) \
                         .filter(tag=tag_id) \
-                        .order_by("-created_at")
+                        .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                     if voices.exists() is False:
                         # ない場合もあるのでよくないかもしれない
                         print("該当する投稿がありません")
@@ -49,7 +51,7 @@ class VoiceListAPIView(APIView):
                     tag_id = request.data["tag_uuid"]
                     voices = Voice.objects.filter(created_at__lte=current_time) \
                         .filter(tag=tag_id) \
-                        .order_by("-created_at")
+                        .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                     serializer = VoiceSerializer(instance=voices, many=True)
                     response_json = construct_voicelist_json(list(serializer.data))
                     return Response(response_json, status=status.HTTP_200_OK)
@@ -62,7 +64,7 @@ class VoiceListAPIView(APIView):
             else:
                 # VOICE-001
                 voices = Voice.objects.filter(created_at__lte=current_time) \
-                    .order_by("-created_at")
+                    .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                 serializer = VoiceSerializer(instance=voices, many=True)
                 response_json = construct_voicelist_json(list(serializer.data))
                 return Response(response_json, status=status.HTTP_200_OK)
