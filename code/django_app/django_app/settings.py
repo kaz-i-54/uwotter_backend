@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'voice',
     'tag',
     'user',
+    'like',
     'rest_framework',
     'djoser',
     'django_filters',

@@ -16,5 +16,5 @@ class Voice(models.Model):
     created_user = models.OneToOneField(User, verbose_name="投稿者", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="投稿日時")
 
-    like = models.ManyToManyField(User, verbose_name="いいね", related_name="like_people")
+    like = models.ManyToManyField(User, verbose_name="いいね", related_name="like_people") 
     tag = models.ManyToManyField(Tag, verbose_name="タグ")

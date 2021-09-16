@@ -26,5 +26,5 @@ urlpatterns = [
     path('login/', include('user.urls')),
     path("api/v1/voice/", include("voice.urls")),
     path('api/v1/tag/', include('tag.urls')),
-
+    path('api/v1/like/', include('like.urls'))
 ]
