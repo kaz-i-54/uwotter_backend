@@ -24,6 +24,10 @@ class UserAuthenticationView(APIView):
     # queryset = User.objects.all()
     # serializer_class = UserSerializer
     # permission_classes = (permissions.IsAuthenticated,)
+    def options(self, request, id):
+        response = HttpResponse()
+        response['allow'] = ','.join(['post'])
+        return response
 
     def post(self, request):
         json_data = json.loads(request.body)
