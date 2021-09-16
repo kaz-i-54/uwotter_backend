@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/v1/voice/", include("voice.urls")),
     path('api/v1/tag/', include('tag.urls')),
-    path('login/', include('user.urls')),
+    path('', include('user.urls')),
 
 ]
