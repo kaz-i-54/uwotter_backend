@@ -11,7 +11,7 @@ class MyUser(models.Model):
     )
     name = models.CharField(
         max_length=64,
-        unique=True,
+        unique=False,
         null=False,
     )
     password = models.CharField(
