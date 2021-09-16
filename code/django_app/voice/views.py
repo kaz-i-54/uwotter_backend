@@ -150,10 +150,19 @@ class VoiceCreateAPIView(APIView):
             "voice": text(base64 encoded)
         }
         '''
-        json_data = json.loads(request.body)
-        user_uuid = json_data['user_uuid']
-        tag_joined = json_data['tags']
-        voice = json_data['voice']
+        print(request.data)
+        if "user_uuid" not in request.data.keys() or \
+                "tags" not in request.data.keys():
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+        if "voice" not in request.data.keys():
+            print("voice can not be found")
+            voice = get_sample_voice()
+        else:
+            voice = request.data["voice"]
+
+        user_uuid = request.data['user_uuid']
+        tag_joined = request.data['tags']
 
         # new Tags
         tag_list = tag_joined.split('#')[1:]

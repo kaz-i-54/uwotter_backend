@@ -8,7 +8,7 @@ from user.models import MyUser
 
 
 class Like_historyListAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         '''
         input:
         {

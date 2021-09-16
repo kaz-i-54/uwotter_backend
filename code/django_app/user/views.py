@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 
 from django.contrib.auth import authenticate
 from django.db import transaction
@@ -30,7 +31,7 @@ class UserAuthenticationView(APIView):
         password = json_data['password']
 
         if MyUser.objects.filter(name=username).exists():
-            return Response({'message':f'username {username} is already exist. please login.'}, status=status.HTTP_200_OK)
+            return Response({'message': f'username {username} is already exist. please login.'}, status=status.HTTP_200_OK)
 
         # serializer = User(data=request.data)
         # if serializer.is_valid():
@@ -43,8 +44,6 @@ class UserAuthenticationView(APIView):
         new_user.password = password
         new_user.save()
 
-        return Response(status=status.HTTP_200_OK)
-
 
 class UserLoginView(APIView):
     '''
@@ -55,9 +54,14 @@ class UserLoginView(APIView):
     # permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-        json_data = json.loads(request.body)
-        username = json_data['username']
-        pw = json_data['password']
+        print(request.data)
+        if "username" not in request.data.keys():
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+        if "password" not in request.data.keys():
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+        username = request.data["username"]
+        pw = request.data["password"]
 
         user = MyUser.objects.filter(name=username, password=pw)
 

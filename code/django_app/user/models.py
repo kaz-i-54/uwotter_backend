@@ -18,3 +18,6 @@ class MyUser(models.Model):
         max_length=64,
         null=False,
     )
+
+    def __str__(self):
+        return self.name

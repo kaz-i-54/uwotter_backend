@@ -19,3 +19,6 @@ class Voice(models.Model):
 
     like = models.ManyToManyField(MyUser, verbose_name="いいね", related_name="like_people")
     tag = models.ManyToManyField(Tag, verbose_name="タグ")
+
+    def __str__(self):
+        return str(self.created_at)
