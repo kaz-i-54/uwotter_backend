@@ -13,6 +13,8 @@ from django.db.models import F
 from .voice_processing import multi_mixing
 import base64
 import json
+from datetime import datetime, timezone
+import pytz
 
 
 class VoiceListAPIView(APIView):
@@ -23,6 +25,12 @@ class VoiceListAPIView(APIView):
         current_time = request.GET.get('now', None)
         tag_uuid = request.GET.get('tag_uuid', None)
         synthetic = request.GET.get('synthetic', None)
+
+        if current_time is not None:
+            dte = datetime.strptime(current_time, "%Y/%m/%d %H:%M:%S")
+            current_time = dte.replace(tzinfo=pytz.timezone("Asia/Tokyo"))
+
+        # print(dte.ToString("%Y/%m/%d %H:%M:%S"))
 
         if current_time is None:
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
