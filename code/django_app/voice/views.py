@@ -10,7 +10,8 @@ from tag.models import Tag
 from user.models import MyUser
 
 from .voice_processing import multi_mixing
-import base64, json
+import base64
+import json
 
 
 class VoiceListAPIView(APIView):
@@ -81,9 +82,9 @@ def construct_voicelist_json(voice_list):
     for voice_dict in voice_list:
         voice = Voice.objects.get(pk=voice_dict["id"])
         tags = voice.tag.all()
-        user = User.objects.filter(pk=voice_dict["created_user"])
+        user = MyUser.objects.filter(pk=voice_dict["created_user"])
         one_dict = {
-            "user": user.values("id", "username")[0],
+            "user": user.values("id", "name")[0],
             "tags": list(tags.values()),
             "voice": get_sample_voice(),
             # "voice": base64.b64encode(voice_dict["voice"]),
