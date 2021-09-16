@@ -1,4 +1,8 @@
-from pydub import effects, AudioSegments
+from pydub import effects, AudioSegment
+from scipy.io.wavfile import write
+import tempfile
+import numpy as np
+
 
 def match_target_amplitude(sound, target_dBFS):
     """振幅の平均をtarget_dBFSに合わせる関数"""
@@ -8,34 +12,16 @@ def match_target_amplitude(sound, target_dBFS):
 
 def multi_mixing(raw_voice_list):
     """音声を合成する関数 wav形式以外はエラーとなる"""
-    sound = AudioSegment.empty
-    for raw_audio in raw_voice_list:
-        try:
-            sound_tmp = AudioSegment(data=raw_audio,
-                                    sample_width=2,
-                                    frame_rate=44100,
-                                    channels=2)
-            
-            normalized_sound_tmp = match_target_amplitude(sound_tmp, -20.0)
-            if normalized_sound_tmp.duration_seconds < sound.duration_seconds:
-                sound = sound.overlay(normalized_sound_tmp, position=0)
-            else:
-                sound = normalized_sound_tmp.overlay(sound, position=0)
-    
-    return match_target_amplitude(sound)
-
-
-def multi_mixing(raw_voice_list):
-    """音声を合成する関数 wav形式以外はエラーとなる"""
+    """base64でエンコード前のwavのデータを返す"""
     sound = AudioSegment.empty()
-    
+
     for raw_audio in raw_voice_list:
         try:
             sound_tmp = AudioSegment(data=raw_audio)
 #         sound_tmp = AudioSegment(data=raw_audio,
 #                                 sample_width=2,
 #                                 frame_rate=44100,
-#                                 channels=2) 
+#                                 channels=2)
 
             normalized_sound_tmp = match_target_amplitude(sound_tmp, -30.0)
             sound_tmp = normalized_sound_tmp
@@ -45,4 +31,12 @@ def multi_mixing(raw_voice_list):
                 sound = sound_tmp.overlay(sound, position=0)
         except:
             print("data comming into multi_mixing is not wav format")
-    return sound
+
+    data = np.array(sound.get_array_of_samples())
+    # wav形式に変換する
+    fp = tempfile.TemporaryFile()
+    write(fp, rate=44100, data=data)
+    fp.seek(0)
+    wav_data = fp.read()
+
+    return wav_data

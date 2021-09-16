@@ -8,9 +8,8 @@ from .serializers import VoiceSerializer
 from .models import Voice
 from tag.models import Tag
 
-# from datetime import datetime
+from .voice_processing import multi_mixing
 import base64
-# Create your views here.
 
 
 class VoiceListAPIView(APIView):
@@ -25,7 +24,17 @@ class VoiceListAPIView(APIView):
             if "synthetic" in request.data.keys():
                 if request.data["synthetic"]:
                     # TAG-003
-                    return None
+                    tag_id = request.data["tag_uuid"]
+                    voices = Voice.objects.filter(created_at__lte=current_time) \
+                        .filter(tag=tag_id) \
+                        .order_by("-created_at")
+                    raw_voice_list = []
+                    for i in voices.values("voice"):
+                        raw_voice_list.append(i["voice"])
+                    raw_wav_multi_data = multi_mixing(raw_voice_list)
+                    response_json = construct_multivoice_json(raw_wav_multi_data, tag_id)
+                    print("TAG-003 responsing...")
+                    return Response(response_json, status=status.HTTP_200_OK)
                 else:
                     # TAG-002
                     tag_id = request.data["tag_uuid"]
@@ -55,6 +64,15 @@ def get_sample_voice():
     with open("voice_sample/001.wav", "br") as f:
         b64_voice = base64.b64encode(f.read())
     return b64_voice
+
+
+def construct_multivoice_json(multi_wav_data, tag_id):
+    tag_q = Tag.objects.filter(pk=tag_id)
+    one_dict = {
+        "voice": base64.b64encode(multi_wav_data),
+        "tags": [tag_q.values()],
+    }
+    return {"result": [one_dict]}
 
 
 def construct_voicelist_json(voice_list):
