@@ -4,8 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from voice.models import Voice
-# from user.models import User
-from django.contrib.auth.models import User
+from user.models import MyUser
 
 
 class Like_historyListAPIView(APIView):
@@ -36,7 +35,7 @@ class Like_historyListAPIView(APIView):
             voice.like_num += 1
             voice.save()
 
-            user_liked = User.objects.get(pk=user_uuid)
+            user_liked = MyUser.objects.get(pk=user_uuid)
             voice.like.add(user_liked)
             voice.save()
             return Response({'message': 'done'}, status.HTTP_200_OK)
