@@ -9,5 +9,6 @@ code/django_app/voice/migrations
 python/development.vscode.txt
 docker-compose.yml
 .gitignore
+code/django_app/voice_sample
 
 

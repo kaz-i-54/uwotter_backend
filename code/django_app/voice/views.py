@@ -84,41 +84,25 @@ class VoiceCreateAPIView(APIView):
             'voice': text(base64 encoded)
         }
         '''
-        # no user search
         user_uuid = request.data['user_uuid']
-        tags = request.data['tags']
+        tag_joined = request.data['tags']
         voice = request.data['voice']
 
-        voice_binary = base64.b64decode(voice)
+        # new Tags
+        tag_list = tag_joined.split('#')[1:]
+        for tag in tag_list:
+            if not Tag.objects.filter(name=tag).exists():
+                newtag = Tag(name=tag)
+                newtag.save()
 
+        # new Voice
+        voice_binary = base64.b64decode(voice)
         new_voice = Voice()
+        # TODO now, no user search, to implement this, User DB is necessary
         new_voice.created_user = User.objects.get(username='root')
-        new_voice.tags = Tag.objects.get(name=tags)
         new_voice.voice = voice_binary
         new_voice.save()
+        for tag in tag_list:
+            new_voice.tag.add(Tag.objects.get(name=tag))
 
-        # serializers = VoiceSerializer(data=request.data)
-        # serializers.is_valid(raise_exception=True)
-        # serializers.save()
-
-        # saved_voice = serializers.instance
-        # //あとでタグのリストをいれる
-        # tag_id_list = []
-        # for _id in tag_id_list:
-        #     saved_voice.tag.add(Tag.objects.gete(id=_id))
-
-        # タグの処理をする
-        # return Response(serializers.data, status.HTTP_201_CREATED)
         return Response({'message': 'done'}, status.HTTP_201_CREATED)
-
-    # テキストで送られてきたtagを分割して、新しいタグならデータベースに登録
-    def save_tag(self, alltag, voice_id):
-        # テキストで送られてきたtagを分割
-        tags = alltag.split('#')
-
-        for i in range(len(tags)):
-            if Tag.objects.filter(name=tags[i]).exists():
-                pass
-            else:
-                newtag = Tag(name=tags[i])
-                newtag.save()
