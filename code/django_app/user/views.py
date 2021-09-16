@@ -24,10 +24,6 @@ class UserAuthenticationView(APIView):
     # queryset = User.objects.all()
     # serializer_class = UserSerializer
     # permission_classes = (permissions.IsAuthenticated,)
-    def options(self, request, id):
-        response = HttpResponse()
-        response['allow'] = ','.join(['post'])
-        return response
 
     def post(self, request):
         json_data = json.loads(request.body)
@@ -48,6 +44,8 @@ class UserAuthenticationView(APIView):
         new_user.password = password
         new_user.save()
         return Response(status.HTTP_201_CREATED)
+
+        return Response(status=status.HTTP_200_OK)
 
 
 class UserLoginView(APIView):
