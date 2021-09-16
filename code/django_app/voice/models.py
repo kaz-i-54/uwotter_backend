@@ -13,8 +13,8 @@ class Voice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     voice = models.BinaryField(verbose_name="ウオート", null=False)
     like_num = models.IntegerField(default=0, verbose_name="いいね数")
-    created_user = models.OneToOneField(User, verbose_name="投稿者", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="投稿日時")
 
+    created_user = models.ForeignKey(User, verbose_name="投稿者", on_delete=models.CASCADE)
     like = models.ManyToManyField(User, verbose_name="いいね", related_name="like_people")
     tag = models.ManyToManyField(Tag, verbose_name="タグ")
