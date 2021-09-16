@@ -42,7 +42,7 @@ class Like_historyListAPIView(APIView):
         else:
             # ほんとはインクリメントしないけどインクリメント
             print("like NOT OK")
-            voice = Voice.objects.get(id=voice_uuid)
-            voice.like_num += 1
-            voice.save()
+            # voice = Voice.objects.get(id=voice_uuid)
+            # voice.like_num += 1
+            # voice.save()
             return Response({'message': '[future error] すでにLIKEしています'}, status.HTTP_200_OK)
