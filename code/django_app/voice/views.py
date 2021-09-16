@@ -37,9 +37,9 @@ class VoiceListAPIView(APIView):
 
         if tag_uuid is not None:
             if synthetic is not None:
-                if synthetic == True:
+                if is_true(synthetic):
                     # TAG-003
-                    print("synthetic is called")
+                    print("-" * 20, "synthetic is called...")
                     voices = Voice.objects.filter(created_at__lte=current_time) \
                         .filter(tag=tag_uuid) \
                         .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
@@ -53,9 +53,9 @@ class VoiceListAPIView(APIView):
                         raw_voice_list.append(i["voice"])
                     raw_wav_multi_data = multi_mixing(raw_voice_list)
                     response_json = construct_multivoice_json(raw_wav_multi_data, tag_uuid)
-                    print("TAG-003 responsing...")
+                    print("-" * 20, "TAG-003 responsing...")
                     return Response(response_json, status=status.HTTP_200_OK)
-                else:
+                elif is_false(synthetic):
                     # TAG-002
                     voices = Voice.objects.filter(created_at__lte=current_time) \
                         .filter(tag=tag_uuid) \
@@ -63,6 +63,8 @@ class VoiceListAPIView(APIView):
                     serializer = VoiceSerializer(instance=voices, many=True)
                     response_json = construct_voicelist_json(list(serializer.data))
                     return Response(response_json, status=status.HTTP_200_OK)
+                else:
+                    return Response(None, status.status.HTTP_400_BAD_REQUEST)
             else:
                 # tag_uuidがあるのにsyntheticがないのでエラー
                 return Response(None, status.status.HTTP_400_BAD_REQUEST)
@@ -83,6 +85,18 @@ def get_sample_voice():
     with open("voice_sample/001.wav", "br") as f:
         b64_voice = base64.b64encode(f.read())
     return b64_voice
+
+
+def is_true(bexp):
+    if type(bexp) == str:
+        return bexp.lower() in {"true"}
+    return bexp
+
+
+def is_false(bexp):
+    if type(bexp) == str:
+        return bexp.lower() in {"false"}
+    return bexp
 
 
 def construct_multivoice_json(multi_wav_data, tag_id):
