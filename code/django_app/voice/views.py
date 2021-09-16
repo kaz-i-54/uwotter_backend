@@ -40,9 +40,12 @@ class VoiceListAPIView(APIView):
                 if is_true(synthetic):
                     # TAG-003
                     print("-" * 20, "synthetic is called...")
-                    voices = Voice.objects.filter(created_at__lte=current_time) \
+                    voices = Voice.objects \
                         .filter(tag=tag_uuid) \
                         .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
+                    # voices = Voice.objects.filter(created_at__lte=current_time) \
+                    #     .filter(tag=tag_uuid) \
+                    #     .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                     if voices.exists() is False:
                         # ない場合もあるのでよくないかもしれない
                         print("該当する投稿がありません")
@@ -57,7 +60,10 @@ class VoiceListAPIView(APIView):
                     return Response(response_json, status=status.HTTP_200_OK)
                 elif is_false(synthetic):
                     # TAG-002
-                    voices = Voice.objects.filter(created_at__lte=current_time) \
+                    # voices = Voice.objects.filter(created_at__lte=current_time) \
+                    #     .filter(tag=tag_uuid) \
+                    #     .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
+                    voices = Voice.objects \
                         .filter(tag=tag_uuid) \
                         .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                     serializer = VoiceSerializer(instance=voices, many=True)
