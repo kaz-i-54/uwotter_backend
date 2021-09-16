@@ -5,4 +5,5 @@ app_name = "aptv1_user"
 
 urlpatterns = [
     path('register/', views.UserAuthenticationView.as_view()),
+    path('login/', views.UserLoginView.as_view()),
 ]
