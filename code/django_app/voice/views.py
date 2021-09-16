@@ -86,7 +86,9 @@ def construct_voicelist_json(voice_list):
         one_dict = {
             "user": user.values("id", "name")[0],
             "tags": list(tags.values()),
-            "voice": get_sample_voice(),
+            # TODO: データベースからbase64にエンコード済みのデータが渡されています
+            "voice": voice_dict["voice"],
+            # "voice": get_sample_voice(),
             # "voice": base64.b64encode(voice_dict["voice"]),
             "like": voice_dict["like_num"],
         }
