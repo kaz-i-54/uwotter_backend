@@ -16,7 +16,7 @@ class Voice(models.Model):
     voice = models.BinaryField(verbose_name="ウオート", null=False)
     like_num = models.IntegerField(default=0, verbose_name="いいね数")
     created_user = models.ForeignKey(MyUser, verbose_name="投稿者", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=timezone.now(), verbose_name="投稿日時")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="投稿日時")
 
     like = models.ManyToManyField(MyUser, verbose_name="いいね", related_name="like_people")
     tag = models.ManyToManyField(Tag, verbose_name="タグ")

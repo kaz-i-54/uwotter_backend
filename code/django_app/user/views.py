@@ -43,6 +43,7 @@ class UserAuthenticationView(APIView):
         new_user.name = username
         new_user.password = password
         new_user.save()
+        return Response(status.HTTP_201_CREATED)
 
 
 class UserLoginView(APIView):

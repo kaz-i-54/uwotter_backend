@@ -80,7 +80,7 @@ class VoiceListAPIView(APIView):
                 return Response(None, status.status.HTTP_400_BAD_REQUEST)
             else:
                 # VOICE-001
-                voices = Voice.objects.filter(created_at__lte=current_time) \
+                voices = Voice.objects \
                     .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                 serializer = VoiceSerializer(instance=voices, many=True)
                 response_json = construct_voicelist_json(list(serializer.data))
