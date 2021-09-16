@@ -38,6 +38,10 @@ class VoiceListAPIView(APIView):
 
         if tag_uuid is not None:
             if synthetic is not None:
+                if is_uuid(tag_uuid) is False:
+                    print(tag_uuid, "(tag_uuid) must be uuid format.")
+                    return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
                 if is_true(synthetic):
                     # TAG-003
                     print("-" * 20, "synthetic is called...")
@@ -175,6 +179,10 @@ class VoiceCreateAPIView(APIView):
                 "tags" not in request.data.keys():
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
+        if len(request.data["user_uuid"]) != 36:
+            print("user UUID was not valid.")
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
         if "voice" not in request.data.keys():
             print("-" * 20, "voice can not be found")
             voice = get_sample_voice()
@@ -207,4 +215,8 @@ class VoiceCreateAPIView(APIView):
 
 
 def strip_string_to_b64(text):
-    return re.sub('^data:audio/wav;base64,', '', text)
+    return re.sub('^data:audio/x-wav;base64,', '', text)
+
+
+def is_uuid(text):
+    return len(text) == 36
