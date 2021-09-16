@@ -15,6 +15,7 @@ import base64
 import json
 from datetime import datetime, timezone
 import pytz
+import re
 
 
 class VoiceListAPIView(APIView):
@@ -171,7 +172,6 @@ class VoiceCreateAPIView(APIView):
             "voice": text(base64 encoded)
         }
         '''
-        print(request.data)
         if "user_uuid" not in request.data.keys() or \
                 "tags" not in request.data.keys():
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
@@ -181,6 +181,9 @@ class VoiceCreateAPIView(APIView):
             voice = get_sample_voice()
         else:
             voice = request.data["voice"]
+            print(voice[:50])
+            voice = strip_string_to_b64(voice)
+            print(voice[:50])
 
         user_uuid = request.data['user_uuid']
         tag_joined = request.data['tags']
@@ -202,3 +205,7 @@ class VoiceCreateAPIView(APIView):
             new_voice.tag.add(Tag.objects.get(name=tag))
 
         return Response(status.HTTP_201_CREATED)
+
+
+def strip_string_to_b64(text):
+    return re.sub('^data:audio/wav;base64,', '', text)
