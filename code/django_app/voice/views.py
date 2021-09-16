@@ -2,14 +2,15 @@
 from rest_framework import views, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from .serializers import VoiceSerializer
 from .models import Voice
 from tag.models import Tag
+from user.models import MyUser
 
 from .voice_processing import multi_mixing
-import base64
+import base64, json
 
 
 class VoiceListAPIView(APIView):
@@ -95,16 +96,17 @@ def construct_voicelist_json(voice_list):
 class VoiceCreateAPIView(APIView):
     def post(self, request, *args, **kwargs):
         '''
-        input:
+        input(json):
         {
-            'user_uuid': text,
-            'tags': text,
-            'voice': text(base64 encoded)
+            "user_uuid": text,
+            "tags": text,
+            "voice": text(base64 encoded)
         }
         '''
-        user_uuid = request.data['user_uuid']
-        tag_joined = request.data['tags']
-        voice = request.data['voice']
+        json_data = json.loads(request.body)
+        user_uuid = json_data['user_uuid']
+        tag_joined = json_data['tags']
+        voice = json_data['voice']
 
         # new Tags
         tag_list = tag_joined.split('#')[1:]
@@ -116,11 +118,10 @@ class VoiceCreateAPIView(APIView):
         # new Voice
         voice_binary = base64.b64decode(voice)
         new_voice = Voice()
-        # TODO now, no user search, to implement this, User DB is necessary
-        new_voice.created_user = User.objects.get(username='root')
         new_voice.voice = voice_binary
+        new_voice.created_user = MyUser.objects.get(id=user_uuid)
         new_voice.save()
         for tag in tag_list:
             new_voice.tag.add(Tag.objects.get(name=tag))
 
-        return Response({'message': 'done'}, status.HTTP_201_CREATED)
+        return Response(status.HTTP_201_CREATED)
