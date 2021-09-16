@@ -8,6 +8,7 @@ from .serializers import VoiceSerializer
 from .models import Voice
 from tag.models import Tag
 from user.models import MyUser
+from django.db.models import F
 
 from .voice_processing import multi_mixing
 import base64
@@ -76,9 +77,19 @@ def get_sample_voice():
 
 def construct_multivoice_json(multi_wav_data, tag_id):
     tag_q = Tag.objects.filter(pk=tag_id)
+
+    # TAGのuuidの変更
+    tag_list = []
+    for one_tag in list(tag_q.values()):
+        one_tag_dict = {
+            "uuid": one_tag["id"],
+            "name": one_tag["name"]
+        }
+        tag_list.append(one_tag_dict)
     one_dict = {
         "voice": base64.b64encode(multi_wav_data),
-        "tags": [tag_q.values()],
+        # "tags": [tag_q.values()],
+        "tags": tag_list
     }
     return {"result": [one_dict]}
 
@@ -89,13 +100,29 @@ def construct_voicelist_json(voice_list):
         voice = Voice.objects.get(pk=voice_dict["id"])
         tags = voice.tag.all()
         user = MyUser.objects.filter(pk=voice_dict["created_user"])
+
+        # USERのUUIDの変更
+        user_dict = {
+            "uuid": user.values("id")[0]["id"],
+            "name": user.values("name")[0]["name"]
+        }
+        # TAGのuuidの変更
+        tag_list = []
+        for one_tag in list(tags.values()):
+            one_tag_dict = {
+                "uuid": one_tag["id"],
+                "name": one_tag["name"]
+            }
+            tag_list.append(one_tag_dict)
+
         one_dict = {
             "id": voice_dict["id"],
-            "user": user.values("id", "name")[0],
-            "tags": list(tags.values()),
+            # "user": user.values("id", "name")[0],
+            "user": user_dict,
+            # "tags": list(tags.values()),
+            "tags": tag_list,
             # TODO: データベースからbase64にエンコード済みのデータが渡されています
             "voice": voice_dict["voice"],
-            # "voice": get_sample_voice(),
             # "voice": base64.b64encode(voice_dict["voice"]),
             "like": voice_dict["like_num"],
         }
