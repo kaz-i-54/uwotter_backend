@@ -82,6 +82,7 @@ class VoiceListAPIView(APIView):
 
 def get_sample_voice():
     """テスト用ボイス生成関数(フシギダネの鳴き声)"""
+    print("フシギダネの鳴き声をエンコード")
     with open("voice_sample/001.wav", "br") as f:
         b64_voice = base64.b64encode(f.read())
     return b64_voice
@@ -170,7 +171,7 @@ class VoiceCreateAPIView(APIView):
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
         if "voice" not in request.data.keys():
-            print("voice can not be found")
+            print("-" * 20, "voice can not be found")
             voice = get_sample_voice()
         else:
             voice = request.data["voice"]

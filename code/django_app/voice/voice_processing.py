@@ -14,6 +14,7 @@ def multi_mixing(raw_voice_list):
     """音声を合成する関数 wav形式以外はエラーとなる"""
     """base64でエンコード前のwavのデータを返す"""
     sound = AudioSegment.empty()
+    mixed_num = 0
 
     for raw_audio in raw_voice_list:
         try:
@@ -29,8 +30,11 @@ def multi_mixing(raw_voice_list):
                 sound = sound.overlay(sound_tmp, position=0)
             else:
                 sound = sound_tmp.overlay(sound, position=0)
+            mixed_num += 1
         except:
             print("data comming into multi_mixing is not wav format")
+
+    print(mixed_num, "件の音声データが合成されました")
 
     data = np.array(sound.get_array_of_samples())
     # wav形式に変換する
