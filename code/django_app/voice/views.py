@@ -116,7 +116,7 @@ def construct_voicelist_json(voice_list):
             tag_list.append(one_tag_dict)
 
         one_dict = {
-            "id": voice_dict["id"],
+            "uuid": voice_dict["id"],
             # "user": user.values("id", "name")[0],
             "user": user_dict,
             # "tags": list(tags.values()),
