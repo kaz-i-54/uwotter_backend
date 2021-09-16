@@ -16,7 +16,7 @@ class VoiceListAPIView(APIView):
     # VOICE001を実装する
     def get(self, request, *args, **kwargs):
         if "now" not in request.data.keys():
-            return Response(None, status.status.HTTP_400_BAD_REQUEST)
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
         current_time = request.data["now"]
 
