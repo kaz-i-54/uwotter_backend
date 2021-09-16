@@ -19,12 +19,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/v1/voices/", include("voice.urls")),
-    path('api/v1/tag/', include('tag.urls')),
-    path('api/auth/', include('djoser.urls.jwt')),
-    path('register/', include('user.urls')),
-    path('login/', include('user.urls')),
     path("api/v1/voice/", include("voice.urls")),
     path('api/v1/tag/', include('tag.urls')),
+    path('login/', include('user.urls')),
 
 ]
