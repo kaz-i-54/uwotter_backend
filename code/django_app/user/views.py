@@ -9,7 +9,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework import status, viewsets, filters
 from rest_framework.views import APIView
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserLoginSerializer
 from .models import MyUser
 
 import json
@@ -18,7 +18,7 @@ import json
 # Create your views here.
 class UserAuthenticationView(APIView):
     '''
-    001の実装
+    User001の実装
     '''
     # queryset = User.objects.all()
     # serializer_class = UserSerializer
@@ -44,3 +44,35 @@ class UserAuthenticationView(APIView):
         new_user.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class UserLoginView(APIView):
+    '''
+    User002の実装
+    '''
+    # queryset = User.objects.all()
+    # serializer_class = UserSerializer
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        json_data = json.loads(request.body)
+        username = json_data['username']
+        pw = json_data['password']
+
+        user = MyUser.objects.filter(name=username, password=pw)
+
+        if user.exists():
+            value = user.values()[0]
+            res = {
+                "id": value['id'],
+                "username": value['name']
+            }
+
+            return Response(res, status=status.HTTP_200_OK)
+
+        else:
+            res = {
+                "id": None,
+                "username": None
+            }
+            return Response(res, status=status.HTTP_401_UNAUTHORIZED)
