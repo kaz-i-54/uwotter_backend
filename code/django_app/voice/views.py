@@ -20,19 +20,20 @@ class VoiceListAPIView(APIView):
     LIMIT_VOICE_NUM = 10
 
     def get(self, request, *args, **kwargs):
-        if "now" not in request.data.keys():
+        current_time = request.GET.get('now', None)
+        tag_uuid = request.GET.get('tag_uuid', None)
+        synthetic = request.GET.get('synthetic', None)
+
+        if current_time is None:
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
-        current_time = request.data["now"]
-
-        if "tag_uuid" in request.data.keys():
-            if "synthetic" in request.data.keys():
-                if request.data["synthetic"]:
+        if tag_uuid is not None:
+            if synthetic is not None:
+                if synthetic == True:
                     # TAG-003
                     print("synthetic is called")
-                    tag_id = request.data["tag_uuid"]
                     voices = Voice.objects.filter(created_at__lte=current_time) \
-                        .filter(tag=tag_id) \
+                        .filter(tag=tag_uuid) \
                         .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                     if voices.exists() is False:
                         # ない場合もあるのでよくないかもしれない
@@ -43,14 +44,13 @@ class VoiceListAPIView(APIView):
                         # TODO: i["vioce"]は何があるか確認する(おそらく音声ファイルが壊れている)
                         raw_voice_list.append(i["voice"])
                     raw_wav_multi_data = multi_mixing(raw_voice_list)
-                    response_json = construct_multivoice_json(raw_wav_multi_data, tag_id)
+                    response_json = construct_multivoice_json(raw_wav_multi_data, tag_uuid)
                     print("TAG-003 responsing...")
                     return Response(response_json, status=status.HTTP_200_OK)
                 else:
                     # TAG-002
-                    tag_id = request.data["tag_uuid"]
                     voices = Voice.objects.filter(created_at__lte=current_time) \
-                        .filter(tag=tag_id) \
+                        .filter(tag=tag_uuid) \
                         .order_by("-created_at")[:self.LIMIT_VOICE_NUM]
                     serializer = VoiceSerializer(instance=voices, many=True)
                     response_json = construct_voicelist_json(list(serializer.data))
@@ -59,7 +59,7 @@ class VoiceListAPIView(APIView):
                 # tag_uuidがあるのにsyntheticがないのでエラー
                 return Response(None, status.status.HTTP_400_BAD_REQUEST)
         else:
-            if "synthetic" in request.data.keys():
+            if synthetic is not None:
                 return Response(None, status.status.HTTP_400_BAD_REQUEST)
             else:
                 # VOICE-001
