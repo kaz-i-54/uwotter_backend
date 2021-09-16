@@ -12,6 +12,8 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer
 from .models import MyUser
 
+import json
+
 
 # Create your views here.
 class UserAuthenticationView(APIView):
@@ -23,8 +25,9 @@ class UserAuthenticationView(APIView):
     # permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-        username = request.data['username']
-        password = request.data['password']
+        json_data = json.loads(request.body)
+        username = json_data['username']
+        password = json_data['password']
 
         if MyUser.objects.filter(name=username).exists():
             return Response({'message':f'username {username} is already exist. please login.'}, status=status.HTTP_200_OK)
