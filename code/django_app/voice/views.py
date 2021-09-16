@@ -90,7 +90,7 @@ class VoiceListAPIView(APIView):
 def get_sample_voice():
     """テスト用ボイス生成関数(フシギダネの鳴き声)"""
     print("フシギダネの鳴き声をエンコード")
-    with open("voice_sample/001.wav", "br") as f:
+    with open("django_app/voice_sample/001.wav", "br") as f:
         b64_voice = base64.b64encode(f.read())
     return b64_voice
 
