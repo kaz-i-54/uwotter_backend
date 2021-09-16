@@ -45,8 +45,6 @@ class UserAuthenticationView(APIView):
         new_user.save()
         return Response(status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_200_OK)
-
 
 class UserLoginView(APIView):
     '''
