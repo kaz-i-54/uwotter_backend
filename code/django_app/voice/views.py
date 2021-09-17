@@ -215,7 +215,8 @@ class VoiceCreateAPIView(APIView):
 
 
 def strip_string_to_b64(text):
-    return re.sub('^data:audio/x-wav;base64,', '', text)
+    text = re.sub('^data:audio/x-wav;base64,', '', text)
+    return re.sub('^data:audio/wav;base64,', '', text)
 
 
 def is_uuid(text):

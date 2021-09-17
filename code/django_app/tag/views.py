@@ -19,8 +19,15 @@ class TagListAPIView(APIView):
         tags = Tag.objects.annotate(Count("voice")) \
             .order_by("-voice__count")[:self.LIMIT_TAG_NUM]
         serializer = TagListSerializer(tags, many=True)
+        tag_list = []
+        for one_tag in list(serializer.data):
+            one_dict = {
+                "uuid": one_tag["id"],
+                "name": one_tag["name"]
+            }
+            tag_list.append(one_dict)
         response_json = {
-            "result": list(serializer.data)
+            "result": tag_list
         }
         return Response(response_json, status=status.HTTP_200_OK)
         # return Response(serializer.data)
