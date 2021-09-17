@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 
 RAKUTEN PANDES
-ryosuke akiba
-takumi hishinuma
-koki endo
-takuya asai
-urara kobayashi
-kazuya isawa
+Takumi Hishinuma
+Koki Endo
+Takaya Asai
+Urara Kobayashi
+Kazuya Isawa
+Ryosuke Akiba
 """
 
 from pathlib import Path
