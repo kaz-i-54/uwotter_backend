@@ -39,7 +39,7 @@ def multi_mixing(raw_voice_list):
     data = np.array(sound.get_array_of_samples())
     # wav形式に変換する
     fp = tempfile.TemporaryFile()
-    write(fp, rate=44100, data=data)
+    write(fp, rate=84100, data=data)
     fp.seek(0)
     wav_data = fp.read()
 
