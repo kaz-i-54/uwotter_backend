@@ -10,3 +10,5 @@ django-cors-headers == 3.8.0
 django-filter
 pydub
 scipy
+
+django-environ
