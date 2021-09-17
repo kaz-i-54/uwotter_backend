@@ -1,6 +1,7 @@
 Django==3.2.7
 django-filter
 djangorestframework==3.12.4
+django-cors-headers==3.8.0
 
 pydub
 scipy
