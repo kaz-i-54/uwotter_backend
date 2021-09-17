@@ -8,6 +8,14 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
+
+RAKUTEN PANDES
+ryosuke akiba
+takumi hishinuma
+koki endo
+takuya asai
+urara kobayashi
+kazuya isawa
 """
 
 from pathlib import Path
