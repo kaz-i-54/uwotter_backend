@@ -1,0 +1,11 @@
+Django==3.2.7
+django-filter
+djangorestframework==3.12.4
+
+pydub
+scipy
+djoser==2.1.0
+
+gunicorn
+django-heroku
+django-environ
