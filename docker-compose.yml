@@ -3,9 +3,8 @@ version: "3.3"
 services:
   python-django:
     container_name: django
-    build: .
-    environment:
-      - DJANGO_SETTINGS_MODULE=project.development
+    build:
+      context: ./Python
     image: python:django_rest_api
     #command: python django_api/manage.py runserver 0.0.0.0:8000
     ports:
@@ -17,20 +16,20 @@ services:
     networks:
       - django_react
 
-  db:
-    container_name: postgres
-    image: postgres:11.2
-    volumes:
-      - django_db:/var/lib/postgres/data
-    networks:
-      - django_react
-    environment:
-      POSTGRES_DB: django_db
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: secret
+  # db:
+  #   container_name: postgres
+  #   image: postgres:11.2
+  #   volumes:
+  #     - django_db:/var/lib/postgres/data
+  #   networks:
+  #     - django_react
+  #   environment:
+  #     POSTGRES_DB: django_db
+  #     POSTGRES_USER: root
+  #     POSTGRES_PASSWORD: secret
 
-volumes:
-  django_db:
+# volumes:
+#   django_db:
 
 networks:
   django_react:
